@@ -162,6 +162,8 @@ main (int argc, char *argv[])
 	       &x_min, &x_max, &y_min, &y_max,
 	       &x_size, &y_size, &pathname);
 
+         picture_t grande_pict;
+
 
          MPI_Init(&argc,&argv);
            MPI_Comm_size(MPI_COMM_WORLD,&numprocs);
@@ -185,12 +187,46 @@ main (int argc, char *argv[])
 
     printf("> I am process %d and I finished my compute, I start saving my pic\n", myid);
 
-
+/*
     char str[15];
     sprintf(str, "%d", myid);
-    strcat(&pathname, &str);
+    strcat(&pathname, &str);*/
 
-    save_picture (&pict, &pathname);
+
+
+    // save_picture (&pict, &pathname);
+
+
+    if(myid == 0){
+      //je suis le proc 0
+
+      //je mets mon resultat dans la grande pic que j'init
+      init_picture(&grande_pict, x_size, y_size);
+
+      int cpt;
+      for(cpt = 0; cpt < y_size/numprocs;cpt++){
+        grande_pict->pixels[cpt] = pict->pixels[cpt];
+      }
+
+      //je récupère les resultats des autres processus
+      int proc;
+      for(proc = 1;proc < numprocs;proc++){
+        //recevoir resultat de proc
+
+        //ajouter le resulat à grande pic
+      }
+
+          //save pic
+
+    } else {
+      //je suis pas le proc 0
+
+      //jenvoi les données deu tableau à proc  0
+    }
+
+
+
+
 
     MPI_Finalize();
 
